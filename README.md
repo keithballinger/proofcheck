@@ -1,13 +1,80 @@
-# ec_parity_proof
+# ProofCheck
 
-## GitHub configuration
+A command-line tool for formalizing and validating mathematical proofs using Lean 4.
 
-To set up your new GitHub repository, follow these steps:
+## Prerequisites
 
-* Under your repository name, click **Settings**.
-* In the **Actions** section of the sidebar, click "General".
-* Check the box **Allow GitHub Actions to create and approve pull requests**.
-* Click the **Pages** section of the settings sidebar.
-* In the **Source** dropdown menu, select "GitHub Actions".
+- Python 3.8 or higher
+- Lean 4 (install from https://leanprover.github.io/lean4/doc/quickstart.html)
 
-After following the steps above, you can remove this section from the README file.
+## Installation
+
+### From Source
+
+1. Clone the repository:
+```bash
+git clone https://github.com/keithballinger/proofcheck.git
+cd proofcheck
+```
+
+2. Install the ProofCheck CLI:
+```bash
+cd proofcheck
+pip install -e .
+```
+
+This will install the `proofcheck` command globally.
+
+## Usage
+
+### Create a New Lean Project
+
+```bash
+proofcheck new my_proof_project
+cd my_proof_project
+```
+
+This creates a new Lean 4 project with the necessary configuration files.
+
+### Check a Lean File
+
+Verify that your Lean proofs are correct:
+
+```bash
+proofcheck check src/Main.lean
+```
+
+### Search Mathlib
+
+Search for theorems and definitions in Lean's mathematical library:
+
+```bash
+proofcheck search "prime number"
+```
+
+### Translate LaTeX to Lean
+
+Convert mathematical statements from LaTeX format to Lean 4:
+
+```bash
+proofcheck translate proof.tex
+```
+
+## Commands
+
+- `proofcheck new <project_name>` - Create a new Lean project
+- `proofcheck check <file_path>` - Verify a Lean file
+- `proofcheck search <query>` - Search Mathlib for theorems
+- `proofcheck translate <tex_file>` - Convert LaTeX to Lean
+
+## Development
+
+To run tests:
+
+```bash
+python -m pytest tests/
+```
+
+## License
+
+MIT
