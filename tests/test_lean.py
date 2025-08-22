@@ -1,53 +1,100 @@
 import unittest
 from unittest.mock import patch, MagicMock
 import os
-import subprocess
-
-# This is a bit of a hack to get the src directory into the python path
 import sys
+import subprocess
+from pathlib import Path
+
+# Add the proofcheck directory to the path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../proofcheck')))
 
-from src.lean import check_file, VerificationResult
+from src.lean import check_file, VerificationResult, check_lean_installation, find_project_root
 
 class TestLean(unittest.TestCase):
 
+    @patch('src.lean.Path.exists')
+    @patch('src.lean.find_project_root')
+    @patch('src.lean.check_lean_installation')
     @patch('src.lean.subprocess.run')
-    def test_check_file_success(self, mock_subprocess_run):
+    def test_check_file_success(self, mock_subprocess_run, mock_check_lean, mock_find_root, mock_exists):
         # Arrange
-        mock_subprocess_run.return_value = MagicMock(check=True, stderr="")
+        mock_exists.return_value = True
+        mock_check_lean.return_value = (True, "Lean installed")
+        mock_find_root.return_value = "/dummy/project"
+        mock_subprocess_run.return_value = MagicMock(returncode=0, stdout="", stderr="")
 
         # Act
-        result = check_file("dummy/path/file.lean")
+        result = check_file("/dummy/project/file.lean")
 
         # Assert
         self.assertTrue(result.success)
-        self.assertEqual(result.message, "✓ Proof verified successfully!")
+        self.assertIn("successfully", result.message.lower())
 
+    @patch('src.lean.Path.exists')
+    @patch('src.lean.find_project_root')
+    @patch('src.lean.check_lean_installation')
     @patch('src.lean.subprocess.run')
-    def test_check_file_proof_failed(self, mock_subprocess_run):
+    def test_check_file_build_failed(self, mock_subprocess_run, mock_check_lean, mock_find_root, mock_exists):
         # Arrange
+        mock_exists.return_value = True
+        mock_check_lean.return_value = (True, "Lean installed")
+        mock_find_root.return_value = "/dummy/project"
         error_output = "file.lean:1:1: error: something went wrong"
-        mock_subprocess_run.side_effect = subprocess.CalledProcessError(1, ["lean"], stderr=error_output)
+        mock_subprocess_run.return_value = MagicMock(returncode=1, stdout="", stderr=error_output)
 
         # Act
-        result = check_file("dummy/path/file.lean")
+        result = check_file("/dummy/project/file.lean")
 
         # Assert
         self.assertFalse(result.success)
-        self.assertIn("✗ Proof failed:", result.message)
+        self.assertIn("Build failed", result.message)
         self.assertIn(error_output, result.message)
 
-    @patch('src.lean.subprocess.run')
-    def test_check_file_lean_not_found(self, mock_subprocess_run):
+    @patch('src.lean.Path.exists')
+    @patch('src.lean.check_lean_installation')
+    def test_check_file_lean_not_installed(self, mock_check_lean, mock_exists):
         # Arrange
-        mock_subprocess_run.side_effect = FileNotFoundError
+        mock_exists.return_value = True
+        mock_check_lean.return_value = (False, "Lean not found")
 
         # Act
-        result = check_file("dummy/path/file.lean")
+        result = check_file("/dummy/project/file.lean")
 
         # Assert
         self.assertFalse(result.success)
-        self.assertIn("Error: `lean` command not found.", result.message)
+        self.assertIn("Lean not found", result.message)
+    
+    def test_check_file_invalid_path(self):
+        # Act
+        result = check_file("/nonexistent/file.lean")
+        
+        # Assert
+        self.assertFalse(result.success)
+        self.assertIn("not found", result.message.lower())
+    
+    @patch('src.lean.subprocess.run')
+    def test_check_lean_installation_success(self, mock_run):
+        # Arrange
+        mock_run.return_value = MagicMock(returncode=0)
+        
+        # Act
+        success, message = check_lean_installation()
+        
+        # Assert
+        self.assertTrue(success)
+        self.assertEqual(mock_run.call_count, 2)  # Called for lake and lean
+    
+    @patch('src.lean.subprocess.run')
+    def test_check_lean_installation_not_found(self, mock_run):
+        # Arrange
+        mock_run.side_effect = FileNotFoundError
+        
+        # Act
+        success, message = check_lean_installation()
+        
+        # Assert
+        self.assertFalse(success)
+        self.assertIn("not found", message.lower())
 
 if __name__ == '__main__':
     unittest.main()

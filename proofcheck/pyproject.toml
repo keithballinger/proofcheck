@@ -4,9 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "proofcheck"
-version = "0.0.1"
+version = "0.1.0"
 authors = [
-  { name="Gemini", email="gemini@google.com" },
+  { name="Keith Ballinger", email="keith@example.com" },
 ]
 description = "A CLI tool to help formalize and validate mathematical proofs using Lean."
 readme = "README.md"
@@ -17,9 +17,14 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "click",
-    "requests",
+    "click>=8.0",
+    "requests>=2.25",
+    "rich>=10.0",
 ]
 
 [project.scripts]
-proofcheck = "proofcheck.src.cli:cli"
+proofcheck = "src.cli:cli"
+
+[tool.setuptools]
+packages = ["src"]
+package-dir = {"src" = "src"}
