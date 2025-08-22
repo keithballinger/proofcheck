@@ -32,16 +32,20 @@ To create a new Lean project for your proofs:
 ```bash
 proofcheck new my_proofs
 cd my_proofs
-lake build
 ```
 
 ### Checking Your Proofs
 
-After writing or translating your proofs:
+To verify your proofs (this automatically builds the project):
 
 ```bash
 proofcheck check MyProof.lean
 ```
+
+The `check` command will:
+1. Find the project root
+2. Run `lake build` to compile the project
+3. Report any errors or confirm successful verification
 
 ### Searching Mathlib
 
