@@ -14,7 +14,46 @@ echo ""
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
+RED='\033[0;31m'
 NC='\033[0m' # No Color
+
+# Detect how to run proofcheck
+PROOFCHECK_CMD=""
+
+# Method 1: Check if proofcheck is installed as a command
+if command -v proofcheck &> /dev/null; then
+    PROOFCHECK_CMD="proofcheck"
+    echo -e "${GREEN}✓ Found installed proofcheck command${NC}"
+# Method 2: Try to run as Python module from project directory
+elif [ -f "proofcheck/src/cli.py" ]; then
+    # Check if Python is available
+    if command -v python3 &> /dev/null; then
+        PYTHON_CMD="python3"
+    elif command -v python &> /dev/null; then
+        PYTHON_CMD="python"
+    else
+        echo -e "${RED}Error: Python not found${NC}"
+        exit 1
+    fi
+    
+    PROOFCHECK_CMD="$PYTHON_CMD -m proofcheck.src.cli"
+    echo -e "${YELLOW}Running ProofCheck as Python module (not installed)${NC}"
+    echo -e "${BLUE}To install ProofCheck globally, run:${NC}"
+    echo "  cd proofcheck && pip install -e ."
+else
+    echo -e "${RED}Error: ProofCheck not found!${NC}"
+    echo ""
+    echo "Please either:"
+    echo "1. Install ProofCheck:"
+    echo "   cd proofcheck"
+    echo "   pip install -e ."
+    echo ""
+    echo "2. Or run this script from the project root directory"
+    echo "   where the 'proofcheck' folder exists"
+    exit 1
+fi
+
+echo ""
 
 # Function to run a command with description
 run_command() {
@@ -42,13 +81,13 @@ echo -e "${GREEN}=== 1. Translating LaTeX to Lean ===${NC}"
 echo ""
 
 run_command "Translate basic number theory from LaTeX to Lean" \
-    "proofcheck translate examples/basic_number_theory.tex"
+    "$PROOFCHECK_CMD translate examples/basic_number_theory.tex"
 
 run_command "Translate prime numbers theorems" \
-    "proofcheck translate examples/prime_numbers.tex"
+    "$PROOFCHECK_CMD translate examples/prime_numbers.tex"
 
 run_command "Translate set theory definitions" \
-    "proofcheck translate examples/set_theory.tex"
+    "$PROOFCHECK_CMD translate examples/set_theory.tex"
 
 echo -e "${GREEN}=== 2. Creating a New Lean Project ===${NC}"
 echo ""
@@ -60,13 +99,13 @@ if [ -d "example_project" ]; then
 fi
 
 run_command "Create a new Lean project called 'example_project'" \
-    "proofcheck new example_project"
+    "$PROOFCHECK_CMD new example_project"
 
 echo -e "${GREEN}=== 3. Checking Lean Files ===${NC}"
 echo ""
 
 run_command "Check the translated number theory file" \
-    "proofcheck check examples/basic_number_theory.lean"
+    "$PROOFCHECK_CMD check examples/basic_number_theory.lean"
 
 echo -e "${BLUE}Note: The check might fail if the translation needs manual adjustments.${NC}"
 echo -e "${BLUE}This is normal - LaTeX to Lean translation provides a starting point.${NC}"
@@ -78,22 +117,22 @@ echo -e "${GREEN}=== 4. Searching Mathlib ===${NC}"
 echo ""
 
 run_command "Search for information about natural numbers" \
-    "proofcheck search 'Nat.add'"
+    "$PROOFCHECK_CMD search 'Nat.add'"
 
 run_command "Search for prime number theorems" \
-    "proofcheck search 'prime'"
+    "$PROOFCHECK_CMD search 'prime'"
 
 run_command "Search for set theory definitions" \
-    "proofcheck search 'Set.union'"
+    "$PROOFCHECK_CMD search 'Set.union'"
 
 echo -e "${GREEN}=== 5. Cache Management ===${NC}"
 echo ""
 
 run_command "View cache statistics" \
-    "proofcheck cache stats"
+    "$PROOFCHECK_CMD cache stats"
 
 run_command "Search again to see cache in action" \
-    "proofcheck search 'Nat.add'"
+    "$PROOFCHECK_CMD search 'Nat.add'"
 
 echo -e "${BLUE}Notice the 'Using cached results' message above${NC}"
 echo ""
@@ -119,7 +158,7 @@ echo "Created example_project/ExampleProject/Simple.lean with simple theorems"
 echo ""
 
 run_command "Check our simple theorems file" \
-    "proofcheck check example_project/ExampleProject/Simple.lean"
+    "$PROOFCHECK_CMD check example_project/ExampleProject/Simple.lean"
 
 echo -e "${GREEN}=== Demo Complete! ===${NC}"
 echo ""

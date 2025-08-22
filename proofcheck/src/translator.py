@@ -36,7 +36,7 @@ class LaTeXToLeanTranslator:
             r"\\cup": "∪",
             r"\\cap": "∩",
             r"\\emptyset": "∅",
-            r"\\setminus": "\\",
+            r"\\setminus": r"\\",
             
             # Relations
             r"\\leq": "≤",
