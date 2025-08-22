@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{amsmath, amsthm}
+
+\title{Prime Numbers}
+\author{Example}
+
+\begin{document}
+\maketitle
+
+\section{Prime Number Properties}
+
+\begin{definition}[Prime Number]
+A natural number $p > 1$ is prime if and only if for all $a, b \in \mathbb{N}$, if $p = a \cdot b$, then $a = 1$ or $b = 1$.
+\end{definition}
+
+\begin{theorem}[Euclid's Theorem]
+There are infinitely many prime numbers.
+\end{theorem}
+
+\begin{proof}
+Suppose there are finitely many primes $p_1, p_2, \ldots, p_n$. 
+Consider $N = p_1 \cdot p_2 \cdot \ldots \cdot p_n + 1$.
+Then $N$ is not divisible by any $p_i$, so either $N$ is prime or has a prime factor not in our list.
+This contradicts our assumption.
+\end{proof}
+
+\begin{lemma}[Prime Divisibility]
+If a prime $p$ divides a product $a \cdot b$, then $p \mid a$ or $p \mid b$.
+\end{lemma}
+
+\begin{theorem}[Fundamental Theorem of Arithmetic]
+Every natural number $n > 1$ can be expressed uniquely as a product of prime powers.
+\end{theorem}
+
+\begin{example}
+The number $12 = 2^2 \cdot 3$ has the unique prime factorization with primes $2$ and $3$.
+\end{example}
+
+\end{document}

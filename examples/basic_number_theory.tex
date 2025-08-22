@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage{amsmath, amsthm}
+
+\title{Basic Number Theory}
+\author{Example}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Natural Numbers}
+
+\begin{theorem}[Addition Commutativity]
+For all natural numbers $n, m \in \mathbb{N}$, we have $n + m = m + n$.
+\end{theorem}
+
+\begin{proof}
+By induction on $n$.
+\end{proof}
+
+\begin{theorem}[Zero Identity]
+For all $n \in \mathbb{N}$, we have $n + 0 = n$ and $0 + n = n$.
+\end{theorem}
+
+\begin{lemma}[Successor Addition]
+For all $n, m \in \mathbb{N}$, we have $\text{succ}(n) + m = \text{succ}(n + m)$.
+\end{lemma}
+
+\section{Divisibility}
+
+\begin{definition}
+We say that $a$ divides $b$ (written $a \mid b$) if there exists $k \in \mathbb{N}$ such that $b = a \cdot k$.
+\end{definition}
+
+\begin{theorem}[Divisibility Transitivity]
+If $a \mid b$ and $b \mid c$, then $a \mid c$.
+\end{theorem}
+
+\begin{proof}
+Suppose $a \mid b$ and $b \mid c$. Then there exist $k_1, k_2 \in \mathbb{N}$ such that $b = a \cdot k_1$ and $c = b \cdot k_2$. 
+Therefore, $c = (a \cdot k_1) \cdot k_2 = a \cdot (k_1 \cdot k_2)$, so $a \mid c$.
+\end{proof}
+
+\end{document}

@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage{amsmath, amsthm}
+
+\title{Basic Set Theory}
+
+\begin{document}
+\maketitle
+
+\section{Set Operations}
+
+\begin{definition}[Set Membership]
+For an element $x$ and a set $A$, we write $x \in A$ if $x$ is a member of $A$.
+\end{definition}
+
+\begin{definition}[Subset]
+A set $A$ is a subset of $B$ (written $A \subseteq B$) if $\forall x \in A, x \in B$.
+\end{definition}
+
+\begin{theorem}[Set Equality]
+Two sets $A$ and $B$ are equal if and only if $A \subseteq B$ and $B \subseteq A$.
+\end{theorem}
+
+\begin{proof}
+$(\Rightarrow)$ If $A = B$, then clearly $A \subseteq B$ and $B \subseteq A$.
+$(\Leftarrow)$ If $A \subseteq B$ and $B \subseteq A$, then $\forall x, x \in A \iff x \in B$, so $A = B$.
+\end{proof}
+
+\begin{definition}[Union and Intersection]
+The union $A \cup B = \{x : x \in A \lor x \in B\}$.
+The intersection $A \cap B = \{x : x \in A \land x \in B\}$.
+\end{definition}
+
+\begin{theorem}[De Morgan's Laws]
+For sets $A$ and $B$:
+\begin{enumerate}
+\item $(A \cup B)^c = A^c \cap B^c$
+\item $(A \cap B)^c = A^c \cup B^c$
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Distributivity]
+For sets $A$, $B$, and $C$:
+$A \cap (B \cup C) = (A \cap B) \cup (A \cap C)$
+\end{theorem}
+
+\end{document}

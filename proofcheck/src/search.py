@@ -7,8 +7,10 @@ from rich.table import Table
 from rich.syntax import Syntax
 from rich.progress import Progress, SpinnerColumn, TextColumn
 import time
+from .cache import SearchCache
 
 console = Console()
+cache = SearchCache()
 
 def validate_query(query):
     """Validate search query."""
@@ -57,13 +59,21 @@ def format_search_results(data, query, max_results=10):
     if len(hits) > max_results:
         console.print(f"\n[dim]Showing {max_results} of {len(hits)} results. Refine your search for more specific results.[/dim]")
 
-def search_mathlib(query, timeout=30, max_retries=3):
-    """Searches mathlib using the loogle.lean-lang.org API with error handling."""
+def search_mathlib(query, timeout=30, max_retries=3, use_cache=True):
+    """Searches mathlib using the loogle.lean-lang.org API with error handling and caching."""
     # Validate query
     valid, msg = validate_query(query)
     if not valid:
         console.print(f"[red]Error: {msg}[/red]")
         return False
+    
+    # Check cache first
+    if use_cache:
+        cached_result = cache.get(query)
+        if cached_result is not None:
+            console.print("[dim]Using cached results[/dim]")
+            format_search_results(cached_result, query)
+            return True
     
     # URL encode the query
     encoded_query = quote(query)
@@ -104,6 +114,10 @@ def search_mathlib(query, timeout=30, max_retries=3):
                 if data.get('error'):
                     console.print(f"[red]Search error: {data['error']}[/red]")
                     return False
+                
+                # Cache the successful result
+                if use_cache:
+                    cache.set(query, data)
                 
                 # Format and display results
                 format_search_results(data, query)
