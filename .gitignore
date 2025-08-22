@@ -41,3 +41,4 @@ translated_output/
 # Test outputs
 test_*.lean
 test_*.tex
+/.lake

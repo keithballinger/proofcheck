@@ -36,7 +36,7 @@ elif [ -f "proofcheck/src/cli.py" ]; then
         exit 1
     fi
     
-    PROOFCHECK_CMD="$PYTHON_CMD -m proofcheck.src.cli"
+    PROOFCHECK_CMD="$PYTHON_CMD -m proofcheck.src"
     echo -e "${YELLOW}Running ProofCheck as Python module (not installed)${NC}"
     echo -e "${BLUE}To install ProofCheck globally, run:${NC}"
     echo "  cd proofcheck && pip install -e ."
@@ -98,6 +98,10 @@ if [ -d "example_project" ]; then
     rm -rf example_project
 fi
 
+echo -e "${BLUE}Note: This requires Lean 4 to be installed.${NC}"
+echo -e "${BLUE}If not installed, visit: https://leanprover.github.io/lean4/doc/quickstart.html${NC}"
+echo ""
+
 run_command "Create a new Lean project called 'example_project'" \
     "$PROOFCHECK_CMD new example_project"
 
@@ -140,7 +144,25 @@ echo ""
 echo -e "${GREEN}=== 6. Working with the Created Project ===${NC}"
 echo ""
 
-cat > example_project/ExampleProject/Simple.lean << 'EOF'
+# Check if the project was created successfully
+if [ -d "example_project" ]; then
+    # Try to find the correct directory structure
+    if [ -d "example_project/ExampleProject" ]; then
+        LEAN_DIR="example_project/ExampleProject"
+    elif [ -d "example_project/Example_project" ]; then
+        LEAN_DIR="example_project/Example_project"  
+    else
+        # Create it manually if not found
+        LEAN_DIR="example_project/ExampleProject"
+        mkdir -p "$LEAN_DIR"
+    fi
+else
+    echo -e "${YELLOW}Note: example_project was not created. Creating it manually...${NC}"
+    LEAN_DIR="example_project/ExampleProject"
+    mkdir -p "$LEAN_DIR"
+fi
+
+cat > "$LEAN_DIR/Simple.lean" << 'EOF'
 -- A simple Lean 4 file to demonstrate proofcheck
 
 theorem add_zero (n : Nat) : n + 0 = n := by
@@ -154,11 +176,11 @@ theorem zero_add (n : Nat) : 0 + n = n := by
 #eval add_zero 5
 EOF
 
-echo "Created example_project/ExampleProject/Simple.lean with simple theorems"
+echo "Created $LEAN_DIR/Simple.lean with simple theorems"
 echo ""
 
 run_command "Check our simple theorems file" \
-    "$PROOFCHECK_CMD check example_project/ExampleProject/Simple.lean"
+    "$PROOFCHECK_CMD check $LEAN_DIR/Simple.lean"
 
 echo -e "${GREEN}=== Demo Complete! ===${NC}"
 echo ""

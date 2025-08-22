@@ -22,7 +22,7 @@ elif [ -f "proofcheck/src/cli.py" ]; then
         echo "Error: Python not found"
         exit 1
     fi
-    PROOFCHECK_CMD="$PYTHON_CMD -m proofcheck.src.cli"
+    PROOFCHECK_CMD="$PYTHON_CMD -m proofcheck.src"
     echo "Running ProofCheck as Python module"
 else
     echo "Error: ProofCheck not found!"
