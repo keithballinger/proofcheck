@@ -2,6 +2,22 @@
 
 This directory contains example Lean projects and LaTeX files to help you get started with ProofCheck.
 
+## Quick Start
+
+We provide two demo scripts to show ProofCheck in action:
+
+### Interactive Demo (Recommended)
+```bash
+./examples/run_examples.sh
+```
+This walks you through each feature step-by-step with explanations.
+
+### Quick Demo
+```bash
+./examples/quick_demo.sh
+```
+This runs all examples quickly without pausing.
+
 ## Examples
 
 ### 1. Basic Number Theory (`basic_number_theory.tex`)
