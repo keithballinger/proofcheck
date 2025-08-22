@@ -1,0 +1,4 @@
+mcp>=0.1.0
+click>=8.0
+requests>=2.25
+rich>=10.0

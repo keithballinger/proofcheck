@@ -75,6 +75,42 @@ To run tests:
 python -m pytest tests/
 ```
 
+## MCP Server (AI Assistant Integration)
+
+ProofCheck includes an MCP (Model Context Protocol) server that allows AI assistants like Claude to use ProofCheck tools directly.
+
+### Quick Setup
+
+1. Install the MCP server dependencies:
+```bash
+pip install mcp
+```
+
+2. Add to Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "proofcheck": {
+      "command": "python3",
+      "args": ["/absolute/path/to/science_buddy/mcp/proofcheck_mcp.py"],
+      "env": {
+        "PYTHONPATH": "/absolute/path/to/science_buddy"
+      }
+    }
+  }
+}
+```
+
+3. Restart Claude Desktop
+
+Now you can ask Claude to:
+- "Translate this LaTeX theorem to Lean"
+- "Create a new Lean project"
+- "Search Mathlib for prime number theorems"
+- "Help me debug this Lean proof"
+
+See `mcp/README.md` for full MCP documentation.
+
 ## License
 
 MIT

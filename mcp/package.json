@@ -1,0 +1,30 @@
+{
+  "name": "@proofcheck/mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server for ProofCheck - Lean proof assistant tools",
+  "main": "build/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node build/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "lean",
+    "proofcheck",
+    "formal-verification",
+    "mathematics"
+  ],
+  "author": "ProofCheck Team",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.5.0",
+    "child_process": "^1.0.2",
+    "glob": "^10.3.10"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2"
+  }
+}

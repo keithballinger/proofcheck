@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "proofcheck": {
+      "command": "python3",
+      "args": ["/path/to/science_buddy/mcp/proofcheck_mcp.py"],
+      "env": {
+        "PYTHONPATH": "/path/to/science_buddy"
+      }
+    }
+  }
+}
